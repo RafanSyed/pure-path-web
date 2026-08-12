@@ -1,26 +1,474 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  box-sizing: border-box;
   }
+
+html,
+body {
+margin: 0;
+padding: 0;
+min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+font-family:
+Arial,
+Helvetica,
+sans-serif;
+
+background: #f5f5f5;
+color: #222;
+}
+
+button,
+input,
+select {
+font: inherit;
+}
+
+/* =========================
+LOGIN PAGE
+========================= */
+
+.login-page {
+min-height: 100vh;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+padding: 20px;
+}
+
+.login-box {
+width: 100%;
+max-width: 380px;
+
+padding: 35px;
+
+background: white;
+
+border: 1px solid #e5e5e5;
+border-radius: 14px;
+
+box-shadow:
+0 10px 35px rgba(0, 0, 0, 0.08);
+
+text-align: center;
+}
+
+.lock-icon {
+font-size: 35px;
+margin-bottom: 15px;
+}
+
+.login-box h1 {
+margin: 0 0 8px;
+
+font-size: 28px;
+}
+
+.login-box p {
+margin: 0 0 25px;
+
+color: #777;
+
+line-height: 1.5;
+}
+
+.login-box input {
+width: 100%;
+
+padding: 13px 14px;
+
+margin-bottom: 10px;
+
+border: 1px solid #ccc;
+border-radius: 7px;
+
+outline: none;
+
+background: white;
+}
+
+.login-box input:focus {
+border-color: #333;
+}
+
+.login-box button {
+width: 100%;
+
+padding: 13px;
+
+border: none;
+border-radius: 7px;
+
+background: #222;
+color: white;
+
+cursor: pointer;
+
+transition:
+background 0.15s ease;
+}
+
+.login-box button:hover {
+background: #333;
+}
+
+.login-box button:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+.login-error {
+margin-top: 15px;
+
+padding: 10px;
+
+border-radius: 6px;
+
+background: #fff0f0;
+
+color: #c00;
+
+font-size: 14px;
+}
+
+/* =========================
+MAIN APP
+========================= */
+
+.app {
+min-height: 100vh;
+
+padding: 45px 20px;
+}
+
+.container {
+width: 100%;
+max-width: 900px;
+
+margin: 0 auto;
+}
+
+/* =========================
+HEADER
+========================= */
+
+.header {
+display: flex;
+
+align-items: center;
+justify-content: space-between;
+
+margin-bottom: 30px;
+}
+
+.header h1 {
+margin: 0 0 5px;
+
+font-size: 30px;
+}
+
+.header p {
+margin: 0;
+
+color: #777;
+}
+
+.refresh-button {
+padding: 9px 14px;
+
+background: white;
+
+border: 1px solid #ccc;
+border-radius: 7px;
+
+cursor: pointer;
+}
+
+.refresh-button:hover {
+background: #f0f0f0;
+}
+
+/* =========================
+TABS
+========================= */
+
+.tabs {
+display: flex;
+
+gap: 8px;
+
+margin-bottom: 20px;
+}
+
+.tab {
+display: flex;
+
+align-items: center;
+
+gap: 8px;
+
+padding: 10px 17px;
+
+background: white;
+
+border: 1px solid #ccc;
+border-radius: 7px;
+
+color: #444;
+
+cursor: pointer;
+
+transition:
+background 0.15s ease,
+color 0.15s ease;
+}
+
+.tab:hover {
+background: #eee;
+}
+
+.tab.active {
+background: #222;
+
+border-color: #222;
+
+color: white;
+}
+
+.count {
+opacity: 0.65;
+
+font-size: 13px;
+}
+
+/* =========================
+ADD DOMAIN
+========================= */
+
+.add-section {
+display: flex;
+
+gap: 10px;
+
+margin-bottom: 20px;
+}
+
+.add-section input {
+flex: 1;
+
+min-width: 0;
+
+padding: 13px 14px;
+
+background: white;
+
+border: 1px solid #ccc;
+border-radius: 7px;
+
+outline: none;
+}
+
+.add-section input:focus {
+border-color: #333;
+}
+
+.add-section button {
+padding: 13px 20px;
+
+border: none;
+border-radius: 7px;
+
+background: #222;
+color: white;
+
+cursor: pointer;
+}
+
+.add-section button:hover {
+background: #333;
+}
+
+/* =========================
+ERROR
+========================= */
+
+.error-box {
+padding: 12px 15px;
+
+margin-bottom: 20px;
+
+background: #fff0f0;
+
+border: 1px solid #ffcccc;
+border-radius: 7px;
+
+color: #c00;
+
+font-size: 14px;
+}
+
+/* =========================
+DOMAIN SECTION
+========================= */
+
+.domain-section {
+background: white;
+
+border: 1px solid #ddd;
+border-radius: 10px;
+
+overflow: hidden;
+}
+
+.section-header {
+padding: 18px 20px;
+
+border-bottom: 1px solid #eee;
+}
+
+.section-header h2 {
+margin: 0 0 4px;
+
+font-size: 18px;
+}
+
+.section-header p {
+margin: 0;
+
+color: #777;
+
+font-size: 14px;
+}
+
+/* =========================
+DOMAIN ROW
+========================= */
+
+.domain-list {
+display: flex;
+
+flex-direction: column;
+}
+
+.domain-row {
+display: flex;
+
+align-items: center;
+justify-content: space-between;
+
+gap: 15px;
+
+padding: 15px 20px;
+
+border-bottom: 1px solid #eee;
+}
+
+.domain-row:last-child {
+border-bottom: none;
+}
+
+.domain-name {
+overflow: hidden;
+
+text-overflow: ellipsis;
+
+white-space: nowrap;
+
+font-size: 15px;
+}
+
+.domain-row select {
+padding: 8px 10px;
+
+background: white;
+
+border: 1px solid #ccc;
+border-radius: 6px;
+
+cursor: pointer;
+
+outline: none;
+}
+
+.domain-row select:focus {
+border-color: #333;
+}
+
+/* =========================
+EMPTY STATE
+========================= */
+
+.empty {
+padding: 55px 20px;
+
+text-align: center;
+
+color: #777;
+}
+
+.empty-icon {
+font-size: 35px;
+
+margin-bottom: 10px;
+}
+
+.empty h3 {
+margin: 0 0 5px;
+
+color: #444;
+}
+
+.empty p {
+margin: 0;
+
+font-size: 14px;
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media (max-width: 600px) {
+.app {
+padding: 25px 12px;
+}
+
+.header {
+align-items: flex-start;
+gap: 15px;
+
+}
+
+.header h1 {
+font-size: 25px;
+}
+
+.tabs {
+overflow-x: auto;
+}
+
+.tab {
+white-space: nowrap;
+}
+
+.add-section {
+flex-direction: column;
+}
+
+.add-section button {
+width: 100%;
+}
+
+.domain-row {
+padding: 14px;
+gap: 10px;
+
+}
+
+.domain-row select {
+flex-shrink: 0;
+}
 }

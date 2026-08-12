@@ -1,116 +1,143 @@
-const BACKEND_URL = process.env.BACKEND_URL;
-const API_AUTH = process.env.API_AUTH;
-
-if (!BACKEND_URL) {
-  throw new Error("BACKEND_URL is not defined");
-}
-
-if (!API_AUTH) {
-  throw new Error("API_AUTH is not defined");
-}
-
-export type DomainFilter = "BLOCKED" | "SAFE" | "OKAY";
+export type DomainFilter =
+| "BLOCKED"
+| "SAFE"
+| "OKAY";
 
 export interface Domain {
-  domain: string;
-  filter: DomainFilter;
+domain: string;
+filter: DomainFilter;
 }
 
-export async function lookupDomain(domain: string) {
-  const response = await fetch(
-    `${BACKEND_URL}/domains/lookup?domain=${encodeURIComponent(domain)}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to lookup domain");
-  }
-
-  return response.json();
+export interface DomainsResponse {
+domains: Domain[];
 }
 
-export async function getDomains(filter?: DomainFilter) {
-  const url = new URL(`${BACKEND_URL}/domains`);
-
-  if (filter) {
-    url.searchParams.set("filter", filter);
-  }
-
-  const response = await fetch(url.toString());
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch domains");
-  }
-
-  return response.json();
+export interface AddDomainResponse {
+success: boolean;
+added: boolean;
+domain: string;
+filter: DomainFilter;
+message?: string;
 }
 
+export interface UpdateDomainResponse {
+success: boolean;
+domain: string;
+filter: DomainFilter;
+}
+
+export interface RemoveDomainResponse {
+success: boolean;
+removed: string;
+}
+
+// Get all domains
+export async function getDomains(
+filter?: DomainFilter
+): Promise<DomainsResponse> {
+const url = new URL(
+"/api/domains",
+window.location.origin
+);
+
+if (filter) {
+url.searchParams.set("filter", filter);
+}
+
+const response = await fetch(url.toString(), {
+method: "GET",
+credentials: "include",
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(
+data.error || "Failed to fetch domains"
+);
+}
+
+return data;
+}
+
+// Add a new domain
 export async function addDomain(
-  domain: string,
-  filter: DomainFilter
-) {
-  const response = await fetch(`${BACKEND_URL}/domains`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${API_AUTH}`,
-    },
-    body: JSON.stringify({
-      domain,
-      filter,
-    }),
-  });
+domain: string,
+filter: DomainFilter
+): Promise<AddDomainResponse> {
+const response = await fetch("/api/domains", {
+method: "POST",
+credentials: "include",
+headers: {
+"Content-Type": "application/json",
+},
+body: JSON.stringify({
+domain,
+filter,
+}),
+});
 
-  const data = await response.json();
+const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.error || "Failed to add domain");
-  }
-
-  return data;
+if (!response.ok) {
+throw new Error(
+data.error || "Failed to add domain"
+);
 }
 
+return data;
+}
+
+// Update a domain's filter
 export async function updateDomain(
-  domain: string,
-  filter: DomainFilter
-) {
-  const response = await fetch(`${BACKEND_URL}/domains`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${API_AUTH}`,
-    },
-    body: JSON.stringify({
-      domain,
-      filter,
-    }),
-  });
+domain: string,
+filter: DomainFilter
+): Promise<UpdateDomainResponse> {
+const response = await fetch("/api/domains", {
+method: "PATCH",
+credentials: "include",
+headers: {
+"Content-Type": "application/json",
+},
+body: JSON.stringify({
+domain,
+filter,
+}),
+});
 
-  const data = await response.json();
+const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.error || "Failed to update domain");
-  }
-
-  return data;
+if (!response.ok) {
+throw new Error(
+data.error || "Failed to update domain"
+);
 }
 
-export async function removeDomain(domain: string) {
-  const response = await fetch(`${BACKEND_URL}/domains`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${API_AUTH}`,
-    },
-    body: JSON.stringify({
-      domain,
-    }),
-  });
+return data;
+}
 
-  const data = await response.json();
+// Remove a domain completely
+export async function removeDomain(
+domain: string
+): Promise<RemoveDomainResponse> {
+const response = await fetch("/api/domains", {
+method: "DELETE",
+credentials: "include",
+headers: {
+"Content-Type": "application/json",
+},
+body: JSON.stringify({
+domain,
+}),
+});
 
-  if (!response.ok) {
-    throw new Error(data.error || "Failed to remove domain");
-  }
+const data = await response.json();
 
-  return data;
+if (!response.ok) {
+throw new Error(
+data.error || "Failed to remove domain"
+);
+}
+
+return data;
 }

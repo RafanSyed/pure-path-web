@@ -130,3 +130,54 @@ export async function removeDomain(
 
   return data;
 }
+
+export interface PromptItem {
+  promptType: string;
+  text: string;
+  updatedAt: string;
+}
+
+export interface ReviewDetails {
+  promptType: string;
+  oldText: string;
+  newText: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt: string;
+}
+
+// Fetch all prompts
+export async function getPrompts(): Promise<{ prompts: PromptItem[] }> {
+  const res = await fetch("/api/prompts");
+  if (!res.ok) throw new Error("Failed to fetch prompts");
+  return res.json();
+}
+
+// Propose a prompt edit
+export async function proposePromptChange(type: string, newText: string) {
+  const res = await fetch(`/api/prompts/${type}/propose`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ newText }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Failed to propose change");
+  return data;
+}
+
+// Fetch details for a secret token link
+export async function getReviewDetails(token: string): Promise<ReviewDetails> {
+  const res = await fetch(`/api/review/${token}`);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Invalid review token");
+  return data;
+}
+
+// Approve or reject a proposed change
+export async function resolveReview(token: string, action: "approve" | "reject") {
+  const res = await fetch(`/api/review/${token}/${action}`, {
+    method: "POST",
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `Failed to ${action}`);
+  return data;
+}
